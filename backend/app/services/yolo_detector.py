@@ -27,6 +27,17 @@ if not MODEL_PATH.exists():
             break
 
 if not MODEL_PATH.exists():
+    try:
+        import urllib.request
+        MODEL_PATH.parent.mkdir(parents=True, exist_ok=True)
+        print(f"[YOLODetector] Model not found locally. Downloading PPE weights to {MODEL_PATH}...", flush=True)
+        url = "https://huggingface.co/Hansung-Cho/yolov8-ppe-detection/resolve/main/best.pt"
+        urllib.request.urlretrieve(url, str(MODEL_PATH))
+        print("[YOLODetector] Model weights downloaded successfully.", flush=True)
+    except Exception as e:
+        print(f"[YOLODetector] Note: Could not auto-download model ({e}).", flush=True)
+
+if not MODEL_PATH.exists():
     raise FileNotFoundError(
         f"PPE model not found at: {MODEL_PATH}"
     )
